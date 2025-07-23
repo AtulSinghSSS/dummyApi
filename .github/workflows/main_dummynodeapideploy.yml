@@ -23,6 +23,7 @@ jobs:
 
       - name: npm install and build
         run: |
+          dir  # Debug: show files
           npm install
           npm run build --if-present
 
@@ -30,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-        
+          path: .  # 👈 upload everything from current directory
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,10 +44,10 @@ jobs:
           name: node-app
           path: ./node-app
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'dummyNodeApiDeploy'
           slot-name: 'Production'
-          package: ./node-app
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BC0AD921438548DB99265EC91D49E9DC }}
+          package: ./node-app
