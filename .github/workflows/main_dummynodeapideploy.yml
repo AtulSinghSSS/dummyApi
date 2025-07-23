@@ -1,4 +1,5 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# Docs for the Azure Web Apps Deploy action:
+# https://github.com/Azure/webapps-deploy
 
 name: Build and deploy Node.js app to Azure Web App - dummyNodeApiDeploy
 
@@ -24,17 +25,16 @@ jobs:
           node-version: '20.x'
 
       - name: npm install and build
-        working-directory: ./
+        working-directory: ./node-api  # 👉 तेरे package.json जिस folder में है वो path दे यहाँ
         run: |
           npm install
           npm run build --if-present
-          # Removed npm run test to avoid failure due to missing test script
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: ./node-api  # 👉 यही path deploy होगा, अंदर package.json हो
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'dummyNodeApiDeploy'  # must match exactly with Azure Web App name
-          slot-name: 'Production'  # case-insensitive, defaults to production
+          app-name: 'dummyNodeApiDeploy'  # ⚠️ तेरा Azure Web App नाम
+          slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BC0AD921438548DB99265EC91D49E9DC }}
           package: ./node-app
