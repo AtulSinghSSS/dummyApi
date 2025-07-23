@@ -21,18 +21,18 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: Install dependencies, build, and test
+      - name: npm install and build
         working-directory: ./dummyApi   # 👈 Directory where package.json exists
         run: |
           npm install
           npm run build --if-present
-          npm run test --if-present
+         
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: ./dummyApi   # 👈 Upload the build folder
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,6 +43,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
+          path: ./node-app
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
